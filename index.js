@@ -1,26 +1,30 @@
-const express = require('express')
-const path = require('path')
-const PORT = process.env.PORT || 5000
-const accountSid = 'AC8ebaaed2b61eb51220722443231ca571';
-const authToken = 'b2c9d35d2d28b44575ffba1252a0c542';
-const client = require('twilio')(accountSid, authToken);
+require('dotenv').config();
+const express = require('express');
+const port = process.env.PORT || 5000;
+const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_TOKEN);
 const bodyParser = require('body-parser');
-const cors = require('cors');
+const app = express();
 
-express()
-  .use(express.static(path.join(__dirname, 'public')))
-  // .use(cors())
-  .use(bodyParser.json())
-  .use(bodyParser.urlencoded({ extended: false }))
-  .set('views', path.join(__dirname, 'views'))
-  .set('view engine', 'ejs')
-  .get('/', (req, res) => res.render('pages/index'))
-  .post('/sendsms', (req, res) => {
-        client.messages
-          .create({body: req.body.sms, from: '+18563865091', to: req.body.receiver})
-          .then(message => {
-              console.log(message.sid, req.body);
-              res.send(200);
-          }) 
-      })
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`))
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.use(bodyParser.json());
+
+app.post('/sendsms', (req, res) => {
+  console.log(req.body);
+  client.messages
+  .create({
+     body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
+     from: '+18563865091',
+     to: req.body.receiver
+   })
+  .then(message => {
+    console.log(message.sid)
+    res.end();
+  });
+  });
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
