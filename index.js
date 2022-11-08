@@ -9,8 +9,8 @@ const cors = require('cors');
 
 express()
   .use(express.static(path.join(__dirname, 'public')))
+  // .use(cors())
   .use(bodyParser.json())
-  .use(cors());
   .use(bodyParser.urlencoded({ extended: false }))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
