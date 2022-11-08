@@ -14,16 +14,16 @@ app.use(bodyParser.json());
 app.post('/sendsms', (req, res) => {
   console.log(req.body);
   client.messages
-  .create({
-     body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
-     from: '+18563865091',
-     to: req.body.receiver
-   })
-  .then(message => {
-    console.log(message.sid)
-    res.end();
-  });
-  });
+    .create({
+      body: req.body.sms,
+      from: '+18563865091',
+      to: req.body.receiver
+    })
+    .then(message => {
+      console.log(message.sid)
+      res.end();
+    });
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
