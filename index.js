@@ -3,6 +3,7 @@ const express = require('express');
 const port = process.env.PORT || 5000;
 const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_TOKEN);
 const bodyParser = require('body-parser');
+var cors = require('cors');
 const app = express();
 
 app.get('/', (req, res) => {
@@ -10,6 +11,7 @@ app.get('/', (req, res) => {
 })
 
 app.use(bodyParser.json());
+app.use(cors());
 
 app.post('/sendsms', (req, res) => {
   console.log(req.body);
