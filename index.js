@@ -13,6 +13,14 @@ app.get('/', (req, res) => {
 app.use(bodyParser.json());
 app.use(cors());
 
+app.use(function (req, res, next){
+  if (req.headers['x-forwarded-proto'] === 'https') {
+    res.redirect('http://' + req.hostname + req.url);
+  } else {
+    next();
+  }
+});
+
 app.post('/sendsms', (req, res) => {
   console.log(req.body);
   client.messages
