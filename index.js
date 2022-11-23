@@ -3,23 +3,11 @@ const express = require('express');
 const port = process.env.PORT || 5000;
 const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_TOKEN);
 const bodyParser = require('body-parser');
-var cors = require('cors');
+const Gen2FA = require('./Gen2FA');
+const gen = new Gen2FA(2, (4*60*1000), '123abc');
 const app = express();
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
 app.use(bodyParser.json());
-app.use(cors());
-
-app.use(function (req, res, next){
-  if (req.headers['x-forwarded-proto'] === 'https') {
-    res.redirect('http://' + req.hostname + req.url);
-  } else {
-    next();
-  }
-});
 
 app.post('/sendsms', (req, res) => {
   console.log(req.body);
@@ -32,6 +20,30 @@ app.post('/sendsms', (req, res) => {
     .then(message => {
       console.log(message.sid)
       res.end();
+    });
+});
+
+app.post('/token-verify', (req, res) => {
+  const result = gen.check2FA(req.body.token, req.body.uid)
+  console.log(req.body, result);
+  if (result === true) {
+      res.status(200).send('PASSCODE ACCEPTED');
+  } else {
+      res.status(404).send('PASSCODE INCORRECT');
+  }
+});
+
+app.post('/token-send', (req, res) => {
+  const token = gen.make2FA(req.body.receiver);
+  client.messages
+    .create({
+      body: token,
+      from: '+18563865091',
+      to: req.body.receiver
+    })
+    .then(message => {
+      console.log(message.sid)
+      res.status(200).send(`CODE SENT ${token}`).end();
     });
 });
 
