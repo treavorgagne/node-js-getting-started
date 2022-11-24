@@ -39,7 +39,7 @@ app.post('/token-send', (req, res) => {
   const token = gen.make2FA(req.body.uid);
   client.messages
     .create({
-      body: req.body.uid + " " + token,
+      body: req.body.uid + " your token is " + token,
       from: '+18563865091',
       to: req.body.receiver
     })
