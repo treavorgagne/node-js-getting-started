@@ -36,7 +36,7 @@ app.post('/token-verify', (req, res) => {
 });
 
 app.post('/token-send', (req, res) => {
-  const token = gen.make2FA(req.body.receiver);
+  const token = gen.make2FA(req.body.uid);
   client.messages
     .create({
       body: token,
