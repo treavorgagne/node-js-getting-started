@@ -29,9 +29,11 @@ app.post('/token-verify', (req, res) => {
   const result = gen.check2FA(req.body.token, req.body.uid)
   console.log(req.body, result);
   if (result === true) {
-      res.status(200).send('PASSCODE ACCEPTED');
+      res.redirect('/Success');
+      // res.status(200).send('PASSCODE ACCEPTED');
   } else {
-      res.status(404).send('PASSCODE INCORRECT');
+      res.redirect('/Failure');
+      // res.status(404).send('PASSCODE INCORRECT');
   }
 });
 
