@@ -9,7 +9,7 @@ const app = express();
 const cors = require('cors');
 
 app.use(bodyParser.json());
-app.use(cors()) // Use this after the variable declaration
+app.use(cors()); 
 
 app.post('/sendsms', (req, res) => {
   console.log(req.body);
