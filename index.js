@@ -7,9 +7,8 @@ const Gen2FA = require('./Gen2FA');
 const gen = new Gen2FA(2, (4*60*1000), '123abc');
 const app = express();
 const cors = require('cors');
-
-app.use(bodyParser.json());
 app.use(cors()); 
+app.use(bodyParser.json());
 
 app.post('/sendsms', (req, res) => {
   console.log(req.body);
