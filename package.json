@@ -8,7 +8,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "node test.js"
+    "test": "node test.js",
+    "nodemon": "./node_modules/nodemon/bin/nodemon.js index.js"
   },
   "dependencies": {
     "body-parser": "^1.20.1",
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "got": "^11.3.0",
+    "nodemon": "^2.0.20",
     "tape": "^4.7.0"
   },
   "repository": {
