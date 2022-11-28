@@ -27,11 +27,21 @@ app.post('/sendsms', (req, res) => {
     });
 });
 
+app.post('/login', (req, res) => {
+  const result = gen.check2FA(req.body.token, req.body.uid);
+  if (result === true) {
+    console.log('success to ', req.body.success);
+    res.redirect(300, req.body.success);
+  } else {
+    console.log('fails to ', req.body.failure);
+    res.redirect(307, req.body.failure);
+  }
+});
+
 app.post('/token-verify', (req, res) => {
   const result = gen.check2FA(req.body.token, req.body.uid);
   console.log(req.body, result);
   if (result === true) {
-    // res.redirect(301, 'https://rococo-chaja-8dbc41.netlify.app');
     res.status(200).send({ cookie: 'authorized', msg: 'PASSCODE ACCEPTED' });
   } else {
     res.status(404).send('PASSCODE INCORRECT');
