@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const upload = require('multer')();
 const port = process.env.PORT || 5000;
 const client = require('twilio')(
   process.env.TWILIO_ACCOUNT_SID,
@@ -10,8 +11,10 @@ const Gen2FA = require('./Gen2FA');
 const gen = new Gen2FA(2, 4 * 60 * 1000, '123abc');
 const app = express();
 const cors = require('cors');
+app.use(upload.any());
 app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/sendsms', (req, res) => {
   console.log(req.body);
@@ -31,10 +34,10 @@ app.post('/login', (req, res) => {
   const result = gen.check2FA(req.body.token, req.body.uid);
   if (result === true) {
     console.log('success to ', req.body.success);
-    res.redirect(300, req.body.success);
+    res.redirect(req.body.success);
   } else {
     console.log('fails to ', req.body.failure);
-    res.redirect(307, req.body.failure);
+    res.redirect(req.body.failure);
   }
 });
 
